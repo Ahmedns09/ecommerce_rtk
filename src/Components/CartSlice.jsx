@@ -37,9 +37,7 @@ const CartSlice = createSlice({
         }
             
         }
-    }
-
-});
+    });
 
 
 export const {
