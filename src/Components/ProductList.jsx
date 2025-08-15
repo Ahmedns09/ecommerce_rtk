@@ -8,9 +8,13 @@ import './ProductList.css';
 
 const ProductList = () => {
 
+    // Initialize the dispatch function to send actions to the Redux store
     const dispatch = useDispatch();
+
+    // Access the current cart items from global Redux state
     const cartItems = useSelector(state => state.cart.cartItems); // Get cart items globally
 
+    // Function to handle adding a product to the cart
     const products = [
         { id: 1, name: 'Product A', price: 60 },
         { id: 2, name: 'Product B', price: 75 },
@@ -18,7 +22,8 @@ const ProductList = () => {
     ];
 
     const handleAddToCart = product => {
-        dispatch(addItemToCart(product));// Add product to cart
+        // Dispatch action to add product to cart
+        dispatch(addItemToCart(product));
     };
 
     return (
@@ -26,19 +31,25 @@ const ProductList = () => {
             <h2 className="product-list-title">Products</h2>
             <ul className="product-list-items">
 
-                {products.map((product) => (
-                    <li key={product.id} className="product-list-item">
-                        <span> {product.name} - ${product.price} </span>
+                {products.map((product) => {
 
-                        <button
-                            className={`add-to-cart-btn ${cartItems.some(item => item.id === product.id) ? 'disabled' : ''}`}
-                            onClick={() => handleAddToCart(product)}
-                            disabled={cartItems.some(item => item.id === product.id)} // Disable if already in cart
-                        >
-                            {cartItems.some(item => item.id === product.id) ? "Added" : "Add to Cart"}
-                        </button>
-                    </li>
-                ))}
+                    // Check if product is already in cart
+                    const isAlreadyInCart = cartItems.some(item => item.id === product.id);
+
+                    return (
+                        <li key={product.id} className="product-list-item">
+                            <span> {product.name} - ${product.price} </span>
+
+                            <button
+                                className={`add-to-cart-btn ${isAlreadyInCart ? 'disabled' : ''}`}
+                                onClick={() => handleAddToCart(product)}
+                                disabled={isAlreadyInCart} // Disable if already in cart
+                            >
+                                {isAlreadyInCart ? "Added" : "Add to Cart"}
+                            </button>
+                        </li>
+                    );
+                })}
 
             </ul>
         </div>
