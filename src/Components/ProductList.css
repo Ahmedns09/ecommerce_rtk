@@ -28,6 +28,7 @@
     cursor: pointer;
   }
 
-  .disabled{
+  .add-to-cart-btn.disabled{
+    opacity: 0.5;
     cursor: not-allowed;
   }

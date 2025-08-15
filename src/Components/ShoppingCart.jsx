@@ -1,20 +1,70 @@
 import React from 'react';
-import './ShoppingCart.css'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { removeItemFromCart, clearCart, decreaseItemQuantity, increaseItemQuantity } from './CartSlice';
+
+import './ShoppingCart.css';
 
 const ShoppingCart = () => {
 
-  return (
-    <>
-    <div className="shopping-cart">
-      <h2 className="shopping-cart-title">Shopping Cart</h2>
-      <ul className="cart-items">
-       
-      </ul>
-      <button className="clear-cart-btn">Clear Cart</button>
-    </div>
-  
-    </>
-  );
+    const dispatch = useDispatch();
+    const cartItems = useSelector(state => state.cart.cartItems);
+    const totalAmount = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+    const handleRemoveItem = (itemID) => {
+        dispatch(removeItemFromCart(itemID));
+    };
+
+    const handleClearCart = () => {
+        dispatch(clearCart());
+    };
+
+    const handleIncreaseQuantity = (itemID) => {
+        dispatch(increaseItemQuantity(itemID));
+    };
+
+    const handleDecreaseQuantity = (itemID) => {
+        dispatch(decreaseItemQuantity(itemID));
+    };
+
+    return (
+        <>
+            <div className="shopping-cart">
+                <h2 className="shopping-cart-title">Shopping Cart</h2>
+
+                <ul className="cart-items">
+
+                    {cartItems.map(item => (
+
+                        <li key={item.id} className='cart-item'>
+                            <span>{item.name} - ${item.price}</span>
+
+                            <div className='quantity-controls'>
+                                <button className='quantity-control-btn' onClick={() => handleDecreaseQuantity(item.id)}>
+                                    -
+                                </button>
+                                <span> &nbsp; {item.quantity} &nbsp; </span>
+                                <button className='quantity-control-btn' onClick={() => handleIncreaseQuantity(item.id)}>
+                                    +
+                                </button>
+                            </div>
+
+                            <button className='remove-item-btn' onClick={() => handleRemoveItem(item.id)}>
+                                Remove
+                            </button>
+                        </li>
+
+                    ))}
+
+                </ul>
+
+                <button className="clear-cart-btn" onClick={handleClearCart}>Clear Cart</button>
+
+            </div>
+
+            <div> {totalAmount ? <div> The total amount is {totalAmount} </div> : ''} </div>
+
+        </>
+    );
 };
 
 export default ShoppingCart;
